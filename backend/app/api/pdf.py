@@ -1,15 +1,34 @@
-from fastapi import APIRouter, File, UploadFile
-from app.services.pdf_service import extract_text_from_pdf
-from app.models.schemas import PdfResponse
-from fastapi import HTTPException
+from fastapi import APIRouter, UploadFile, File, Depends
+from sqlalchemy.orm import Session
+from app.database import SessionLocal
+from app.models import PDFDocument
+import fitz
 
 router = APIRouter()
 
-@router.post("/upload-pdf", response_model=PdfResponse)
-async def upload_pdf(file: UploadFile = File(...)):
-    contents = await file.read()
+
+def get_db():
+    db = SessionLocal()
     try:
-        text = extract_text_from_pdf(contents)
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    return PdfResponse(text=text)
+        yield db
+    finally:
+        db.close()
+
+@router.post("/upload-pdf")
+async def upload_pdf(pdf: UploadFile = File(...), db: Session = Depends(get_db)):
+    contents = await pdf.read()
+
+    # Save text from PDF
+    with open("temp.pdf", "wb") as f:
+        f.write(contents)
+
+    doc = fitz.open("temp.pdf")
+    text = "\n".join([page.get_text() for page in doc])
+
+    # Create and store record
+    pdf_record = PDFDocument(filename=pdf.filename, content=text)
+    db.add(pdf_record)
+    db.commit()
+    db.refresh(pdf_record)
+
+    return {"pdf_id": pdf_record.pdf_id}
