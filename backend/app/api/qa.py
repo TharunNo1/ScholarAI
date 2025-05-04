@@ -28,3 +28,4 @@ def ask_question(req: QuestionRequest, db: Session = Depends(get_db)):
     answer = run_llm(pdf_text, req.question)
 
     return {"answer": answer}
+

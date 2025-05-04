@@ -10,5 +10,5 @@ class PDFDocument(Base):
 
     pdf_id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     filename = Column(String)
-    content = Column(String)  # Optionally store full extracted text
+    content = Column(String)  
     uploaded_at = Column(DateTime, default=datetime.utcnow)

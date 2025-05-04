@@ -1,5 +1,4 @@
-# app/services/pdf_service.py
-import fitz  # PyMuPDF
+import fitz
 from app.core.logging import logger
 
 def extract_text_from_pdf(pdf_bytes: bytes) -> str:
