@@ -3,27 +3,24 @@ import axios from "axios";
 
 export default function QuestionForm({ pdfId, onAnswer }) {
   const [question, setQuestion] = useState("");
+  const [loading, setLoading] = useState(false); // <-- loading state
 
   const askQuestion = async () => {
     if (!question) return alert("Enter a question.");
     if (!pdfId) return alert("Upload a PDF first.");
 
-    console.log(question, pdfId)
-
     try {
+      setLoading(true);  // start loading
       const res = await axios.post("http://localhost:8000/qa/ask", {
-        question: question,
+        question,
         pdf_id: pdfId,
-      }, {
-        headers: {
-          "Content-Type": "application/json"
-        }
       });
-
       onAnswer(res.data.answer || "No answer returned.");
     } catch (err) {
       onAnswer("Error getting answer.");
       console.error(err);
+    } finally {
+      setLoading(false);  // stop loading
     }
   };
 
@@ -35,9 +32,14 @@ export default function QuestionForm({ pdfId, onAnswer }) {
         rows={3}
         value={question}
         onChange={(e) => setQuestion(e.target.value)}
+        placeholder="Type your research question here..."
       />
-      <button onClick={askQuestion} className="mt-2 bg-green-600 text-white px-4 py-2 rounded">
-        Ask
+      <button
+        onClick={askQuestion}
+        className="mt-2 bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
+        disabled={loading}
+      >
+        {loading ? "Thinking..." : "Ask"}
       </button>
     </div>
   );

@@ -7,53 +7,32 @@ export default function App() {
   const [pdfId, setPdfId] = useState(null);
   const [answer, setAnswer] = useState("");
 
-  return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="max-w-3xl mx-auto bg-white p-6 rounded shadow">
-        <h1 className="text-2xl font-bold mb-4">AI-Powered Research Assistant</h1>
+  const handlePdfUpload = (pdfId) => {
+    setPdfId(pdfId);
+  };
 
-        <PDFUploader onUpload={setPdfId} />
-        <QuestionForm pdfId={pdfId} onAnswer={setAnswer} />
+  const handleAnswer = (answer) => {
+    setAnswer(answer);
+  };
+
+  return (
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
+      <div className="w-full max-w-xl bg-white shadow-xl rounded-lg p-8">
+      <div className="text-center mb-6">
+      <h2 className="text-3xl font-bold text-blue-600">AI-Powered Research Assistant</h2>
+      <hr className="mt-3 w-1/4 mx-auto border-b-2 border-blue-600" />
+    </div>
+
+        <PDFUploader onUpload={handlePdfUpload} />
+
+        <hr className="my-6 border-gray-300" />
+
+        <QuestionForm pdfId={pdfId} onAnswer={handleAnswer} />
+
+        <hr className="my-6 border-gray-300" />
+
         <AnswerBox answer={answer} />
       </div>
     </div>
   );
 }
-
-
-
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-// import './App.css'
-
-// function App() {
-//   const [count, setCount] = useState(0)
-
-//   return (
-//     <>
-//       <div>
-//         <a href="https://vite.dev" target="_blank">
-//           <img src={viteLogo} className="logo" alt="Vite logo" />
-//         </a>
-//         <a href="https://react.dev" target="_blank">
-//           <img src={reactLogo} className="logo react" alt="React logo" />
-//         </a>
-//       </div>
-//       <h1>Vite + React</h1>
-//       <div className="card">
-//         <button onClick={() => setCount((count) => count + 1)}>
-//           count is {count}
-//         </button>
-//         <p>
-//           Edit <code>src/App.jsx</code> and save to test HMR
-//         </p>
-//       </div>
-//       <p className="read-the-docs">
-//         Click on the Vite and React logos to learn more
-//       </p>
-//     </>
-//   )
-// }
-
-// export default App

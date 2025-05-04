@@ -3,6 +3,13 @@ import axios from "axios";
 
 export default function PDFUploader({ onUpload }) {
   const [pdfFile, setPdfFile] = useState(null);
+  const [pdfName, setPdfName] = useState("");
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setPdfFile(file);
+    setPdfName(file.name);
+  };
 
   const handleUpload = async () => {
     if (!pdfFile) return alert("Select a PDF first.");
@@ -11,9 +18,8 @@ export default function PDFUploader({ onUpload }) {
 
     try {
       const res = await axios.post("http://localhost:8000/pdf/upload-pdf", formData);
-      onUpload(res.data.pdf_id);  // Pass PDF ID to parent
-      console.log(res);
-      alert("PDF uploaded!");
+      onUpload(res.data.pdf_id);
+      alert("PDF uploaded successfully!");
     } catch (err) {
       alert("Upload failed.");
       console.error(err);
@@ -21,10 +27,21 @@ export default function PDFUploader({ onUpload }) {
   };
 
   return (
-    <div className="my-4">
-      <label className="block font-semibold mb-2">Upload PDF</label>
-      <input type="file" accept="application/pdf" onChange={(e) => setPdfFile(e.target.files[0])} />
-      <button onClick={handleUpload} className="ml-4 bg-blue-600 text-white px-4 py-2 rounded">
+    <div className="mb-6">
+      <label className="block text-xl font-semibold mb-3">Upload PDF</label>
+      <div className="flex items-center space-x-4">
+        <input 
+          type="file" 
+          accept="application/pdf" 
+          onChange={handleFileChange} 
+          className="border p-3 rounded-lg w-full text-gray-700"
+        />
+        
+      </div>
+      <button
+        onClick={handleUpload}
+        className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300"
+      >
         Upload
       </button>
     </div>
