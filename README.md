@@ -34,6 +34,8 @@ cd frontend/scholar-ai
 npm install
 npm run dev
 ```
+Expected UI View:
+![image](https://github.com/user-attachments/assets/f6ce5193-9065-443a-91b8-063c7967a893)
 
 ### Start Ollama (Local LLM)
 
